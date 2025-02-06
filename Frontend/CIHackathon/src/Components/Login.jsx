@@ -1,7 +1,45 @@
-import React from 'react'
-import Logo from '../assets/images/logo.png'
+import React,  { useState, useEffect } from 'react'
+import Logo from '../assets/images/logo.png';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Login() {
+    const navigate = useNavigate();
+
+    const [ user, setUser ] = useState([]);
+    const [ profile, setProfile ] = useState([]);
+
+    const login = useGoogleLogin({
+        onSuccess: (codeResponse) => setUser(codeResponse),
+        onError: (error) => console.log('Login Failed:', error)
+    });
+
+    useEffect(
+      () => {
+          if (user) {
+              axios
+                  .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+                      headers: {
+                          Authorization: `Bearer ${user.access_token}`,
+                          Accept: 'application/json'
+                      }
+                  })
+                  .then((res) => {
+                      setProfile(res.data);
+                      Cookies.set('user_profile', JSON.stringify(res.data));
+                      navigate('/home'); 
+                  })
+                  .catch((err) => console.log(err));
+          }
+      },
+      [ user ]
+  );
+
+  console.log(profile)
+
     return (
         <>
             <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -17,7 +55,7 @@ export default function Login() {
                             <h1 className="text-2xl xl:text-3xl font-extrabold">Sign up</h1>
                             <div className="w-full flex-1 mt-8">
                                 <div className="flex flex-col items-center">
-                                    <button className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
+                                    <button className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-green-200 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
                                         <div className="bg-white p-2 rounded-full">
                                             <svg className="w-4" viewBox="0 0 533.5 544.3">
                                                 <path
@@ -38,9 +76,9 @@ export default function Login() {
                                                 />
                                             </svg>
                                         </div>
-                                        <span className="ml-4">Sign Up with Google</span>
+                                        <span className="ml-4" onClick={() => login()}>Sign Up with Google</span>
                                     </button>
-                                   
+
                                 </div>
                                 <div className="my-12 border-b text-center">
                                     <div className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
@@ -58,7 +96,7 @@ export default function Login() {
                                         type="password"
                                         placeholder="Password"
                                     />
-                                    <button className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                                    <button className="mt-5 tracking-wide font-semibold bg-green-600 text-gray-100 w-full py-4 rounded-lg hover:bg-green-600 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                                         <svg
                                             className="w-6 h-6 -ml-2"
                                             fill="none"
@@ -73,7 +111,7 @@ export default function Login() {
                                         </svg>
                                         <span className="ml-3">Sign Up</span>
                                     </button>
-                                  
+
                                 </div>
                             </div>
                         </div>
