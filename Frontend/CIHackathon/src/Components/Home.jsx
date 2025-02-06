@@ -1,11 +1,20 @@
-import React from 'react'
+
+import MarketPrice from './Marketprice';
+import Navbar from './Navbar'
+import WeatherCard from './Weathercard';
+
 
 export default function Home() {
+
+  
+
+
+
   return (
     <>
-      <h1 class="text-3xl bg-gray-500 text-clifford font-bold underline">
-        Hello world!
-      </h1>
+      <Navbar />
+      <WeatherCard />
+      <MarketPrice />
     </>
   )
 }

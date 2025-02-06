@@ -4,6 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 
 export default function Login() {
@@ -111,7 +112,8 @@ export default function Login() {
                                         </svg>
                                         <span className="ml-3">Sign Up</span>
                                     </button>
-
+                                    <p className='p-4'>Don't have an account? <NavLink to="/register">Register here</NavLink>.</p> {/* Registration link */}
+  
                                 </div>
                             </div>
                         </div>
