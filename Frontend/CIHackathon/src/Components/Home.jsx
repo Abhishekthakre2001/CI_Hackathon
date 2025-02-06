@@ -1,5 +1,5 @@
 
-import MarketPrice from './Marketprice';
+import MarketPrice from './Marketplace';
 import Navbar from './Navbar'
 import WeatherCard from './Weathercard';
 
